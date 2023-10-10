@@ -1,0 +1,37 @@
+# Importar las bibliotecas necesarias
+import streamlit as st
+import requests
+import json
+
+# Función para obtener datos de la API de Vectara
+def obtener_datos_vectara(api_url):
+    token = "zqt_TtYXl-t8_gNT7h_tobMoA9FsOLf1szQUpVlJHw"
+    headers = {'Authorization': f'Bearer {token}'}
+    response = requests.get(api_url, headers=headers)
+    if response.status_code == 200:
+        return json.loads(response.text)
+    else:
+        return None
+
+# Función para generar el resumen
+def generar_resumen(datos):
+    # Aquí puede implementar la lógica para generar un resumen de los datos
+    # Por ejemplo, calcular métricas, extraer información relevante, etc.
+    resumen = f"Total de reuniones: {len(datos['reuniones'])}"
+    return resumen
+
+# Interfaz de Streamlit
+st.title('Resumen de Información de Vectara')
+
+# Obtener la URL de la API desde el usuario
+api_url = st.text_input('Ingrese la URL de la API de Vectara:', '')
+
+# Botón para realizar la acción
+if st.button('Generar Resumen'):
+    datos = obtener_datos_vectara(api_url)
+    if datos:
+        resumen = generar_resumen(datos)
+        st.write(f"Resumen:\n{resumen}")
+    else:
+        st.write('No se pudo obtener los datos. Verifique su URL de API.')
+
